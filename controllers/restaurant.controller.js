@@ -1,14 +1,14 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const User = require("../models/users.model.js");
+const Restaurant = require("../models/restaurant.model.js");
 const Joi = require("@hapi/joi");
 
 const registerSchema = Joi.object({
-  firstName: Joi.string().min(3).required(),
-  lastName: Joi.string().min(3).required(),
+  restaurantName: Joi.string().min(3).required(),
+  name: Joi.string().min(3).required(),
   email: Joi.string().min(6).required().email(),
   password: Joi.string().min(6).required(),
-  
+ 
 });
 
 const loginSchema = Joi.object({
@@ -17,7 +17,7 @@ const loginSchema = Joi.object({
 });
 
 const register = async (req, res) => {
-  const checkEmail = await User.findOne({ email: req.body.email });
+  const checkEmail = await Restaurant.findOne({ email: req.body.email });
 
   if (checkEmail) {
     res.status(400).send("Email already exists");
@@ -27,9 +27,9 @@ const register = async (req, res) => {
   const salt = await bcrypt.genSalt(10);
 
   const passwordHash = await bcrypt.hash(req.body.password, salt);
-  const user = new User({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
+  const user = new Restaurant({
+    restaurantName: req.body.restaurantName,
+    name: req.body.name,
     email: req.body.email,
     password: passwordHash,
     
@@ -48,7 +48,7 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const user = await User.findOne({ email: req.body.email });
+  const user = await Restaurant.findOne({ email: req.body.email });
   if (!user) {
     res.status(400).send("User not found");
     return;
@@ -64,11 +64,50 @@ const login = async (req, res) => {
       res.status(400).send(error.details[0].message);
     } else {
       const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
-      res.header("auth-token", token).send(token);
+      return res.status(200).json({ token: `Bearer ${token}` });
     }
   } catch (error) {
     res.status(500).send(error);
   }
 };
 
-module.exports = { register, login };
+const getAllRestaurants = async (req, res) => {
+  try {
+    const restaurants = await Restaurant.find();
+    res.status(200).json(restaurants);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+const getRestaurantUser = async (req, res,next) => {
+  try {
+    const { decoded } = res;
+    const user = await Restaurant.findById(decoded._id);
+    if(!user){
+      res.status(404).send("User not found");
+    }
+    return res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json(error);
+    
+  }
+
+}
+
+
+const deleteRestaurantUser = async (req, res, next) => {
+  try {
+     const { decoded } = res;
+    const restaurant = await Restaurant.findByIdAndDelete(decoded._id);
+    
+    return res.status(200).json({ success: true, restaurant: {} });
+  } catch (error) {
+    console.log(error);
+     next(error);
+  }
+}
+
+module.exports = { getAllRestaurants ,login,
+  register,getRestaurantUser,deleteRestaurantUser};

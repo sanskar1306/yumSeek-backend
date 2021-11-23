@@ -19,11 +19,7 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  role: {
-    type: String,
-    enum: ["Restaurant", "Guest"],
-    required: true,
-  },
+
   createdAt: { type: Date, default: Date.now },
 });
 

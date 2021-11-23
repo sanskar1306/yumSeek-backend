@@ -3,7 +3,8 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const authRoute = require("./routes/users");
+const userRoute = require("./routes/users.js");
+const restaurantRoute = require("./routes/restaurant.js");
 require("dotenv").config();
 const PORT = process.env.PORT;
 
@@ -17,8 +18,8 @@ connection.once("open", function () {
   console.log("MongoDB database connection established successfully");
 });
 
-app.use("/api/users",authRoute);
-
+app.use("/api/users",userRoute);
+app.use("/api/restaurantUser",restaurantRoute);
 app.listen(PORT, function () {
   console.log("Server is running on Port: " + PORT);
 });
