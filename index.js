@@ -23,3 +23,6 @@ app.use("/api/restaurantUser",restaurantRoute);
 app.listen(PORT, function () {
   console.log("Server is running on Port: " + PORT);
 });
+
+
+module.exports = app;

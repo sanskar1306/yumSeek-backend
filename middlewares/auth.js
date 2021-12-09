@@ -3,9 +3,9 @@ const jwt = require("jsonwebtoken");
 const AuthMiddleware = {};
 
 AuthMiddleware.generateAccessToken = function generateAccessToken(userLoad) {
-  console.log(userLoad);
+  
   return jwt.sign(userLoad.toJSON(), process.env.TOKEN_SECRET, {
-    expiresIn: keys.expiresIn,
+    expiresIn: "24h",
   });
 };
 
@@ -18,7 +18,7 @@ AuthMiddleware.verifyToken = function verifyToken(req, res, next) {
 
   function verifyCallBack(error, decode) {
     if (error) return res.status(401).json({ error: "Access Denied" });
-
+      
     res.decoded = decode;
 
     return next();

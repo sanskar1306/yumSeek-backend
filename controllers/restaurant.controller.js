@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const auth = require("../middlewares/auth.js");
 const Restaurant = require("../models/restaurant.model.js");
 const Joi = require("@hapi/joi");
 
@@ -63,8 +64,9 @@ const login = async (req, res) => {
     if (error) {
       res.status(400).send(error.details[0].message);
     } else {
-      const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
-      return res.status(200).json({ token: `Bearer ${token}` });
+      let token = await auth.generateAccessToken(user);
+    
+      return res.status(200).json({ jwtoken: `Bearer ${token}` });
     }
   } catch (error) {
     res.status(500).send(error);
@@ -109,5 +111,18 @@ const deleteRestaurantUser = async (req, res, next) => {
   }
 }
 
+const updateRestaurantUser = async (req, res, next) => {
+  try {
+    const { decoded } = res;
+    const restaurant = await Restaurant.findByIdAndUpdate(decoded._id, {
+      $set: req.body
+    });
+    return res.status(200).json({ success: true, restaurant: restaurant });
+  } catch (error) {
+    console.log(error);
+     next(error);
+  }
+}
+
 module.exports = { getAllRestaurants ,login,
-  register,getRestaurantUser,deleteRestaurantUser};
+  register,getRestaurantUser,deleteRestaurantUser,updateRestaurantUser};

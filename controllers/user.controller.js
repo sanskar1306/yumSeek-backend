@@ -50,7 +50,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    res.status(400).send("User not found");
+    res.status(404).send("User not found");
     return;
   }
   const validPassword = await bcrypt.compare(req.body.password, user.password);
@@ -71,4 +71,18 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login };
+const deleteUser = async (req, res, next) => {
+  try {
+    const { decoded } = res;
+    const user = await User.findByIdAndDelete(decoded._id);
+
+    return res.status(200).json({ success: true, user: {} });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
+
+
+
+module.exports = { register, login ,deleteUser};
