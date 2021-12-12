@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const AddressSchema = new Schema({
-  user_id: {
+  user: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },
@@ -31,7 +31,7 @@ const AddressSchema = new Schema({
   },
   creationdate: {
     type: Date,
-    default: Date.now,
+    default: Date.now(),
   },
 });
 
