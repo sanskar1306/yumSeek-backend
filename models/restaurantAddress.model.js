@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const AddressSchema = new Schema({
-  restaurant_id: {
+const RestaurantAddressSchema = new Schema({
+  profile: {
     type: Schema.Types.ObjectId,
-    ref: "Restaurant",
+    ref: "RestaurantProfile",
   },
   address1: {
     type: String,
@@ -35,4 +35,18 @@ const AddressSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model("Address", AddressSchema);
+module.exports = mongoose.model("RestaurantAddress", RestaurantAddressSchema);
+
+
+/*
+{
+  "address1":"Plot no 28",
+  "address2":"Vishwakarma Mandir Road",
+  "area":"Ramchandra Nagar",
+  "state":"Maharashtra",
+  "pinCode":425001,
+  "isDefault":true
+}
+
+
+*/
