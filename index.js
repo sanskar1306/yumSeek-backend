@@ -5,6 +5,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const userRoute = require("./routes/users.js");
 const restaurantRoute = require("./routes/restaurant.js");
+const restaurantProfileRoute = require("./routes/restaurantProfile.js");
 require("dotenv").config();
 const PORT = process.env.PORT;
 
@@ -19,7 +20,8 @@ connection.once("open", function () {
 });
 
 app.use("/api/users",userRoute);
-app.use("/api/restaurantUser",restaurantRoute);
+app.use("/api/restaurantUser", restaurantRoute);
+app.use("/api/restaurantProfile", restaurantProfileRoute);
 app.listen(PORT, function () {
   console.log("Server is running on Port: " + PORT);
 });

@@ -1,28 +1,40 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
+const auth = require("../middlewares/auth");
 const path = require("path");
-const restaurantProfileController = require("../controllers/restaurantProfile.controller.js");
+const {
+  getAllRestaurantProfile,
+  getRestaurantProfileById,
+  createRestaurantProfile,
+  updateRestaurantProfile,
+} = require("../controllers/restaurantProfile.controller.js");
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "./public/uploads/restaurantProfile");
-    },
-    filename: function (req, file, cb) {
-        cb(
-          null,
-          new Date().getTime().toString() +
-            "-" +
-            file.fieldname +
-            path.extname(file.originalname)
-        );
-    }
+  destination: (req, file, cb) => {
+    cb(null, "./uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      new Date().getTime().toString() +
+        "-" +
+        file.fieldname +
+        path.extname(file.originalname)
+    );
+  },
 });
 
-const upload = multer({ dest: "uploads/" });
-router.get('/', restaurantProfileController.getAllRestaurantProfile);
-router.get('/restaurant/:id', restaurantProfileController.getRestaurantProfileById);
-router.post('/createProfile', restaurantProfileController.createRestaurantProfile);
-router.post('/updateProfile', restaurantProfileController.updateRestaurantProfile);
+const upload = multer({ storage: storage });
+router.get("/", getAllRestaurantProfile);
+router.get(
+  "/restaurant/:id",
+  getRestaurantProfileById
+);
+router.post("/createProfile",auth.verifyToken, upload.single("logo"), createRestaurantProfile);
+router.post(
+  "/updateProfile",
+ updateRestaurantProfile
+);
 
 module.exports = router;

@@ -6,7 +6,7 @@ const RestaurantProfileSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Restaurant",
   },
- 
+
   vegClass: { type: String, enum: ["Veg", "Non-veg"], required: true },
   createdAt: { type: Date, default: Date.now },
   reviews: [
@@ -30,6 +30,9 @@ const RestaurantProfileSchema = new Schema({
   phone: {
     type: Number,
     required: true,
+  },
+  logo: {
+    type: String,
   },
 });
 
