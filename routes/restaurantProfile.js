@@ -28,13 +28,11 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 router.get("/", getAllRestaurantProfile);
 router.get(
-  "/restaurant/:id",
+  "/fetch/:id",
+  auth.verifyToken,
   getRestaurantProfileById
 );
 router.post("/createProfile",auth.verifyToken, upload.single("logo"), createRestaurantProfile);
-router.post(
-  "/updateProfile",
- updateRestaurantProfile
-);
+
 
 module.exports = router;

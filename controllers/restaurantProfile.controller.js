@@ -57,16 +57,26 @@ const createRestaurantProfile = async (req, res) => {
   }
 };
 
-const updateRestaurantProfile = async (req, res) => {
-  try {
-  } catch (error) {}
-};
 
-const getRestaurantProfileById = async (req, res) => {};
+
+const getRestaurantProfileById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    let profile = await RestaurantProfile.findOne({ restaurant: id })
+      .populate("restaurant", ["name", "restaurantName", "email"]);
+     if (!profile)
+       return res
+         .status(404)
+         .json({ errors: "No associated profile for requested resource" });
+     return res.status(200).json(profile);
+  } catch (error) {
+    res.status(500).json(error);  
+  }
+};
 
 module.exports = {
   getAllRestaurantProfile,
   createRestaurantProfile,
   getRestaurantProfileById,
-  updateRestaurantProfile,
+  
 };
