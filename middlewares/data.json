@@ -1,25 +1,3 @@
-const express = require("express");
-const router = express.Router();
-const auth = require("../middlewares/auth");
-
-const {
-  placeOrder, 
-  cancelOrder,
-  getAllOrders,
-  getOrderById,
-  acceptOrder,
-} = require("../controllers/order.controller.js");
-
-router.post("/placeOrder", auth.verifyToken, placeOrder);
-router.put("/acceptOrder/:id", auth.verifyToken, acceptOrder);
-router.put("/cancelOrder/:id", auth.verifyToken, cancelOrder);
-router.get("/getOrderById/:id", auth.verifyToken, getOrderById);
-router.get("/getAllOrders", auth.verifyToken, getAllOrders);
-
-module.exports = router;
-
-
-/*
 {
     "restaurant": "61b200845c3169f2eb60aaca",
     "total": 550,
@@ -48,5 +26,3 @@ module.exports = router;
     "paymentstatus": "complete",
     "deliveryaddress": "61b5b54637c3d41111090d86"
 }
-
-*/
